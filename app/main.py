@@ -1,15 +1,38 @@
-import datetime
-from typing import Annotated
+# app/main.py
+from fastapi import FastAPI, Depends, HTTPException, Query
+from typing import Annotated, Optional
+from fastapi.concurrency import asynccontextmanager
+from sqlmodel import select
+from datetime import datetime
 
-from fastapi import Depends, FastAPI, HTTPException, Query
-from sqlmodel import Field, SQLModel, Session, create_engine, select
+# 내부 모듈 임포트
+from .database import engine, get_session
+from .models import (
+    Post, PostPublic, PostCreate, PostUpdate,
+    User, UserPublic, UserCreate
+)
+from . import utilities  # 해시 함수 등 사용 예정
+from .routers import post,user,auth
+from .config import settings
 
 
-class Posts(SQLModel, table =True):
-    id : int = Field(default=None, primary_key = True)
-    title : str
-    content : str
-    published : bool = Field(default=True)
-    created_at : datetime = Field(default_factory=datetime)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    # 여기서 create_all
+    from sqlmodel import SQLModel
+    SQLModel.metadata.create_all(engine)
     
-postgresql_url = ""
+    
+app = FastAPI(lifespan=lifespan)
+
+app.include_router(post.router)
+app.include_router(user.router)
+app.include_router(auth.router)
+
+    
+
+
+
+
+
