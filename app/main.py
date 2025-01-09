@@ -22,7 +22,10 @@ async def lifespan(app: FastAPI):
     # 여기서 create_all
     from sqlmodel import SQLModel
     SQLModel.metadata.create_all(engine)
-    
+
+# def handler(event, context):
+#     pass
+
     
 app = FastAPI(lifespan=lifespan)
 
