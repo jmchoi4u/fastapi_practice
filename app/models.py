@@ -82,3 +82,13 @@ class PostUpdate(PostBase):
     title: Optional[str] = None
     content: Optional[str] = None
     secret_name: Optional[str] = None
+    
+
+#Vote
+class VoteBase(SQLModel):
+    __tablename__ = "votes"
+
+
+class Vote(VoteBase, table = True):
+    votes_id: int = Field(foreign_key="users.id", ondelete="CASCADE", primary_key=True)
+    posts_id: int = Field(foreign_key="posts.id", ondelete="CASCADE", primary_key=True)

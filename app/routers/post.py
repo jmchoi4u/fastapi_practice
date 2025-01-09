@@ -15,7 +15,7 @@ from .. import utilities  # 해시 함수 등 사용 예정
 
 router = APIRouter(
     prefix="/posts",
-    tags=['post']
+    tags=['post'],
 )
 
 
